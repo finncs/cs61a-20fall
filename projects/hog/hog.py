@@ -94,7 +94,16 @@ def swine_align(player_score, opponent_score):
     False
     """
     # BEGIN PROBLEM 4a
-    "*** YOUR CODE HERE ***"
+    if player_score == 0 or opponent_score == 0:
+        return False
+    
+    a, b = player_score, opponent_score
+    while b:
+         a, b = b, a % b
+    if a >= 10:
+        return True
+    else:
+        return False
     # END PROBLEM 4a
 
 
@@ -116,7 +125,10 @@ def pig_pass(player_score, opponent_score):
     False
     """
     # BEGIN PROBLEM 4b
-    "*** YOUR CODE HERE ***"
+    if player_score < opponent_score:
+        return abs(player_score - opponent_score) < 3
+    else:
+        return False
     # END PROBLEM 4b
 
 
@@ -155,7 +167,32 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    def cur_strategy(who):
+        if who:
+            return strategy1
+        else:
+            return strategy0
+    def score(who):
+        if who:
+            return score1
+        else:
+            return score0
+    
+    while score0 <= goal and score1 <= goal:
+        rolls = cur_strategy(who)(score(who), score(other(who)))
+        if who:
+            score1 += take_turn(rolls, score0, dice)
+        else:
+            score0 += take_turn(rolls, score1, dice)
+
+        if score0 >= goal or score1 >= goal:
+            return score0, score1 
+        elif who == 0 and extra_turn(score0, score1):
+            continue
+        elif who == 1 and extra_turn(score1, score0):
+            continue
+        else:
+            who = other(who)
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
