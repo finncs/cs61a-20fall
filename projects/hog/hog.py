@@ -179,12 +179,15 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
             return score0
     
     while score0 <= goal and score1 <= goal:
+        # Compute rolls and new score
         rolls = cur_strategy(who)(score(who), score(other(who)))
         if who:
             score1 += take_turn(rolls, score0, dice)
         else:
             score0 += take_turn(rolls, score1, dice)
-
+        # Call commontary function returned by last turn 
+        say = say(score0, score1)
+        # Judge return or extra trun or next turn
         if score0 >= goal or score1 >= goal:
             return score0, score1 
         elif who == 0 and extra_turn(score0, score1):
@@ -280,7 +283,18 @@ def announce_highest(who, last_score=0, running_high=0):
     """
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+    def say(score0, score1):
+        def score(who):
+            if who:
+                return score1
+            else:
+                return score0
+        dscore = score(who) - last_score
+        if dscore > running_high:
+            print(dscore, 'point(s)! The most yet for Player', who)
+            return announce_highest(who, score(who), dscore)
+        return announce_highest(who, score(who), running_high)
+    return say
     # END PROBLEM 7
 
 
