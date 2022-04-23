@@ -112,22 +112,30 @@ def max_subseq(n, t):
     """
     if t == 0:
         return 0
-    
-    if t > len(str(n)):
-        t = len(str(n))
-    max = 0
-    return help(str(n), 0, t, 0, max)
+    word = str(n)
+    length = len(word)
+    if t > length:
+        t = length
+    path = ''
+    max = -1
+    return backtrack(word, path, length, t, 0, max)
 
-def help(seq, level, t, val, max):
-    if level == t:
-        if val > max:
-            max = val
-        return max
-    else:
-        for i in range(len(seq)):
-            cur = int(seq[i])
-            rest = seq[:i] + seq[i+1:]
-        return max
+def backtrack(word, path, length, t, index, max):
+    if len(path) == t:
+        if int(path) > max:
+            return int(path)
+        else:
+            return max
+    
+    for i in range(index, length):
+        path = path + word[i]
+        cur_max = backtrack(word, path, length, t, i + 1, max)
+        if cur_max > max:
+            max = cur_max
+        path = path[:-1]
+
+    return max
+
 
 def add_chars(w1, w2):
     """
