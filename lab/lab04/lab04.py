@@ -120,6 +120,7 @@ def max_subseq(n, t):
     max = -1
     return backtrack(word, path, length, t, 0, max)
 
+# Sorry here I used backtrack to solve this problem.
 def backtrack(word, path, length, t, index, max):
     if len(path) == t:
         if int(path) > max:
@@ -163,5 +164,7 @@ def add_chars(w1, w2):
     ...       ['For', 'While', 'Set', 'SetComp']) # Must use recursion
     True
     """
-    "*** YOUR CODE HERE ***"
+    if not w1:
+        return w2
+    return add_chars(w1[1:], w2.replace(w1[0], '', 1))
 
