@@ -97,7 +97,21 @@ def autocorrect(user_word, valid_words, diff_function, limit):
     than LIMIT.
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if user_word in valid_words:
+        return user_word
+    
+    index, score = -1, 0
+    for word in valid_words:
+        score = max(score, len(word) + 1)
+    for i in range(0, len(valid_words)):
+        cur_score = diff_function(user_word, valid_words[i], limit)
+        if cur_score <= limit and cur_score < score:
+            score, index = cur_score, i 
+
+    if index == -1:
+        return user_word
+    else:
+        return valid_words[index]
     # END PROBLEM 5
 
 
@@ -107,32 +121,36 @@ def shifty_shifts(start, goal, limit):
     their lengths.
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    # User recusion rather than loop
+    def helper(start, goal, limit, num):
+        if not start or not goal:
+            return num + abs(len(start) - len(goal))
+        if num > limit:
+            return limit + 1
+        if start[0] != goal[0]:
+            num += 1
+        return helper(start[1:], goal[1:], limit, num)
+    
+    return helper(start, goal, limit, 0)
     # END PROBLEM 6
 
 
 def pawssible_patches(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
-    assert False, 'Remove this line'
+    def helper(start, goal, limit, num):
+        if not start or not goal:
+            return num + abs(len(start) - len(goal))
+        if num > limit:
+            return limit + 1
+        if start[0] == goal[0]:
+            return helper(start[1:], goal[1:], limit, num)
+        else:
+            num += 1
+            # min(delete, add, subtitute)
+            return min(helper(start[1:], goal, limit, num), helper(start, goal[1:], limit, num),
+             helper(start[1:], goal[1:], limit, num))
 
-    if ______________: # Fill in the condition
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    elif ___________: # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    else:
-        add_diff = ... # Fill in these lines
-        remove_diff = ...
-        substitute_diff = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
+    return helper(start, goal, limit, 0)
 
 def final_diff(start, goal, limit):
     """A diff function. If you implement this function, it will be used."""
